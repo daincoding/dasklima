@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+body {
+    background-color: black;
+    color: white;
+    padding: 2rem;
+    box-sizing: border-box;
+    font-family: system-ui;
+}
