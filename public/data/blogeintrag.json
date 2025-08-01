@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "titel": "Klimawandel verstehen",
+    "kurzbeschreibung": "Eine Einführung in die Ursachen und Auswirkungen des Klimawandels.",
+    "kategorie": "Wissenschaft",
+    "datum": "2023-11-05",
+    "text": "Der Klimawandel ist ein komplexes globales Phänomen, das durch den Anstieg von Treibhausgasen verursacht wird..."
+  },
+  {
+    "id": 2,
+    "titel": "10 einfache Tipps zum CO₂-Sparen",
+    "kurzbeschreibung": "Wie du im Alltag Emissionen reduzierst — ganz ohne Verzicht.",
+    "kategorie": "Lifestyle",
+    "datum": "2024-02-18",
+    "text": "Von kürzeren Duschzeiten bis hin zu regionaler Ernährung – hier sind zehn alltagstaugliche Tricks..."
+  },
+  {
+    "id": 3,
+    "titel": "Die Rolle erneuerbarer Energien",
+    "kurzbeschreibung": "Wie Wind, Sonne und Wasser unseren Planeten retten können.",
+    "kategorie": "Technologie",
+    "datum": "2024-07-02",
+    "text": "Erneuerbare Energien spielen eine Schlüsselrolle in der Energiewende..."
+  }
+]
