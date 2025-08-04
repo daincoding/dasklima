@@ -9,9 +9,12 @@ function Navbar() {
         >
             <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
                 {/* Logo / Title */}
-                <h1 className="text-xl font-bold text-[var(--cl-green)] tracking-wide">
-                    DAS KLIMA 🌎
-                </h1>
+                <Link
+                    to="/"
+                    className="text-xl font-bold text-[var(--cl-green)] tracking-wide hover:text-[var(--cl-blue)] transition-colors"
+                >
+                    D.A.S. KLIMA 🌎
+                </Link>
 
                 {/* Navigation Links */}
                 <ul className="flex space-x-6 text-sm font-medium">

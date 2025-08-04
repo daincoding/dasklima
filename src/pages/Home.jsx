@@ -7,9 +7,6 @@ const Home = () => {
         <div className="min-h-screen bg-[var(--cl-base)] text-[var(--cl-text)] px-6 py-10">
 
             <DesignShowcase />
-
-            <CommentSection />
-
         </div>
     );
 };
