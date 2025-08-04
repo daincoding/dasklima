@@ -78,6 +78,9 @@ function BlogUebersicht() {
                     ))}
                 </select>
 
+                {/* Favoriten & Alle Filter-Buttons */}
+
+
                 {/* Beitragliste */}
                 <ul className="space-y-4">
                     {gefilterteBeitraege.map((eintrag) => (

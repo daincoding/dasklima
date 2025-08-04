@@ -34,6 +34,14 @@ function Navbar() {
                             Usermanagement
                         </Link>
                     </li>
+                    <li>
+                        <Link
+                            to="/newentry"
+                            className="hover:text-[var(--cl-blue)] transition-colors"
+                        >
+                            Neuer Eintrag
+                        </Link>
+                    </li>
                 </ul>
             </div>
         </nav>
