@@ -3,12 +3,13 @@ import DesignShowcase from "../components/DesignShowcase.jsx";
 
 const Home = () => {
     const handleReset = () => {
-        // Nur die Kommentare löschen – wenn du ALLES löschen willst, nimm localStorage.clear();
-        localStorage.removeItem("comments");
-        alert("Kommentare wurden zurückgesetzt.");
-        window.location.reload(); // Damit der UI-State aktualisiert wird
+        if (confirm("Möchtest du wirklich alle Kommentare und Blogeinträge zurücksetzen?")) {
+            localStorage.removeItem("comments");
+            localStorage.removeItem("beitraege");
+            alert("Zurückgesetzt ✅");
+            window.location.reload();
+        }
     };
-
     return (
         <div className="min-h-screen bg-[var(--cl-base)] text-[var(--cl-text)] px-6 py-10">
 

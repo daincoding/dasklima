@@ -92,10 +92,6 @@ const Usermanagement = () => {
                     </div>
                 </div>
             )}
-
-            <p className="mt-6 text-xs text-[var(--cl-subtext0)] italic">
-                Diese Funktion ist rein zu Testzwecken – keine echte Benutzerverwaltung.
-            </p>
         </div>
     );
 };
