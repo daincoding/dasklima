@@ -32,7 +32,7 @@ const Usermanagement = () => {
         <div className="relative max-w-xl mx-auto bg-[var(--cl-surface0)] text-[var(--cl-text)] p-6 mt-10 rounded-xl shadow-md">
             <h2 className="text-2xl font-bold text-[var(--cl-mauve)] mb-6">Admin Testseite</h2>
             <p className="mb-4 text-[var(--cl-subtext1)]">
-                ⚙️ Testnutzer – Rolle änderbar per Schieberegler. Klick auf Namen zeigt Profil.
+                ⚙️ Usermanagement
             </p>
 
             <ul className="space-y-4">
