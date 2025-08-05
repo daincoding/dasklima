@@ -69,6 +69,13 @@ function BlogUebersicht() {
                 {ausgewaehlt ? (
                     <div>
                         <h2 className="text-2xl font-bold mb-2 text-[var(--cl-sky)]">{ausgewaehlt.titel}</h2>
+                        <div className="flex justify-center mb-4">
+                            <img
+                                src={`/images/${ausgewaehlt.bild}`}
+                                alt={ausgewaehlt.titel}
+                                className="w-[600px] h-[300px] object-cover rounded-xl border-4 border-[var(--cl-green)] shadow-xl mt-6 mx-auto mb-4"
+                            />
+                        </div>
                         <p className="text-sm text-[var(--cl-subtext1)] mb-2">
                             {ausgewaehlt.kategorie} • {new Date(ausgewaehlt.datum).toLocaleDateString()}
                         </p>
