@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRole } from "../context/RoleContext.jsx";
+import {AnimatePresence, motion} from 'framer-motion';
 
 const CommentSection = ({ postId = "demo-post" }) => {
     const [kommentare, setKommentare] = useState([]);
@@ -36,7 +37,7 @@ const CommentSection = ({ postId = "demo-post" }) => {
         } else {
             const neuerKommentar = {
                 id: Date.now(),
-                name: form.name,
+                name: nutzername || form.name, // immer Context-Name verwenden, falls vorhanden
                 text: form.text,
                 date: new Date().toLocaleString("de-DE", {
                     day: "2-digit",
@@ -74,74 +75,112 @@ const CommentSection = ({ postId = "demo-post" }) => {
     };
 
     return (
-        <div className="mt-10 max-w-2xl mx-auto bg-[var(--cl-surface0)] text-[var(--cl-text)] p-6 rounded-xl shadow-md">
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="mt-10 max-w-2xl mx-auto bg-[var(--cl-surface0)] text-[var(--cl-text)] p-6 rounded-xl shadow-md"
+        >
             <h3 className="text-2xl font-bold mb-4 text-[var(--cl-green)]">Kommentare</h3>
 
             {kommentare.length === 0 ? (
-                <p className="text-[var(--cl-subtext0)] italic mb-4">
+                <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-[var(--cl-subtext0)] italic mb-4"
+                >
                     Noch keine Kommentare.
-                </p>
+                </motion.p>
             ) : (
-                <ul className="space-y-3 mb-6">
-                    {kommentare.map((c) => {
-                        const istAutor = rolle !== "besucher" &&
-                            c.name === nutzername &&
-                            c.author === rolle;
-                        const istAdmin = rolle === "admin";
 
-                        return (
-                            <li
-                                key={c.id}
-                                className="bg-[var(--cl-surface1)] p-4 rounded-md border border-[var(--cl-surface2)]"
-                            >
-                                <div className="flex justify-between text-sm font-semibold">
-                                    <span>{c.name}</span>
-                                    <span className="text-xs text-[var(--cl-subtext1)]">{c.date}</span>
-                                </div>
-                                <p className="mt-2 text-[var(--cl-subtext0)]">{c.text}</p>
+                <motion.ul
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                        visible: {
+                            transition: {
+                                staggerChildren: 0.1
+                            }
+                        }
+                    }}
+                    className="space-y-3 mb-6"
+                >
+                    <AnimatePresence>
+                        {kommentare.map((c) => {
+                            const istAutor = rolle !== "besucher" && c.name === nutzername && c.author === rolle;
+                            const istAdmin = rolle === "admin";
 
-                                {(istAutor || istAdmin) && (
-                                    <div className="flex gap-2 mt-2">
-                                        {istAutor && (
-                                            <button
-                                                onClick={() => kommentarBearbeiten(c.id)}
-                                                className="text-sm text-[var(--cl-green)] hover:underline"
-                                            >
-                                                ✏️ Bearbeiten
-                                            </button>
-                                        )}
-                                        {istAdmin && (
-                                            <button
-                                                onClick={() => kommentarLoeschen(c.id)}
-                                                className="text-sm text-[var(--cl-red)] hover:underline"
-                                            >
-                                                🗑️ Löschen
-                                            </button>
-                                        )}
+                            return (
+                                <motion.li
+                                    key={c.id}
+                                    layout
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    transition={{ duration: 0.4 }}
+                                    className="bg-[var(--cl-surface1)] p-4 rounded-md border border-[var(--cl-surface2)]"
+                                >
+                                    <div className="flex justify-between text-sm font-semibold">
+                                        <span>{c.name}</span>
+                                        <span className="text-xs text-[var(--cl-subtext1)]">{c.date}</span>
                                     </div>
-                                )}
-                            </li>
-                        );
-                    })}
-                </ul>
+                                    <p className="mt-2 text-[var(--cl-subtext0)]">{c.text}</p>
+
+                                    {(istAutor || istAdmin) && (
+                                        <div className="flex gap-2 mt-2">
+                                            {istAutor && (
+                                                <motion.button
+                                                    whileHover={{ scale: 1.05 }}
+                                                    onClick={() => kommentarBearbeiten(c.id)}
+                                                    className="text-sm text-[var(--cl-green)] hover:underline"
+                                                >
+                                                    ✏️ Bearbeiten
+                                                </motion.button>
+                                            )}
+                                            {istAdmin && (
+                                                <motion.button
+                                                    whileHover={{ scale: 1.05 }}
+                                                    onClick={() => kommentarLoeschen(c.id)}
+                                                    className="text-sm text-[var(--cl-red)] hover:underline"
+                                                >
+                                                    🗑️ Löschen
+                                                </motion.button>
+                                            )}
+                                        </div>
+                                    )}
+                                </motion.li>
+                            );
+                        })}
+                    </AnimatePresence>
+                </motion.ul>
             )}
 
-            {/* Formular nur für Benutzer & Admin */}
+            {/* Kommentar-Formular */}
             {rolle !== "besucher" && (
-                <form onSubmit={verarbeiteAbsenden} className="space-y-3">
-                    <input
-                        name="name"
-                        value={form.name}
-                        onChange={verarbeiteAenderung}
-                        placeholder="Dein Name"
-                        required
-                        className="w-full p-3 rounded-md bg-[var(--cl-surface1)] text-[var(--cl-text)]
-                        placeholder:text-[var(--cl-subtext1)]
-                        border border-[var(--cl-teal)]
-                        shadow-[0_0_6px_1px_var(--cl-teal)]
-                        focus:outline-none focus:ring-2 focus:ring-[var(--cl-green)] transition
-                        ${nutzername ? 'opacity-60 cursor-not-allowed' : ''}`}"
-                    />
+                <motion.form
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                    onSubmit={verarbeiteAbsenden}
+                    className="space-y-3"
+                >
+                    {/* Nur anzeigen, wenn kein Nutzername im Kontext */}
+                    {!nutzername && (
+                        <input
+                            name="name"
+                            value={form.name}
+                            onChange={verarbeiteAenderung}
+                            placeholder="Dein Name"
+                            required
+                            className="w-full p-3 rounded-md bg-[var(--cl-surface1)] text-[var(--cl-text)]
+                    placeholder:text-[var(--cl-subtext1)]
+                    border border-[var(--cl-teal)]
+                    shadow-[0_0_6px_1px_var(--cl-teal)]
+                    focus:outline-none focus:ring-2 focus:ring-[var(--cl-green)] transition"
+                        />
+                    )}
+
                     <textarea
                         name="text"
                         value={form.text}
@@ -149,21 +188,27 @@ const CommentSection = ({ postId = "demo-post" }) => {
                         placeholder="Dein Kommentar"
                         required
                         className="w-full p-3 rounded-md bg-[var(--cl-surface1)] text-[var(--cl-text)]
-                        placeholder:text-[var(--cl-subtext1)]
-                        border border-[var(--cl-teal)]
-                        shadow-[0_0_6px_1px_var(--cl-teal)]
-                        focus:outline-none focus:ring-2 focus:ring-[var(--cl-green)] transition"
+                placeholder:text-[var(--cl-subtext1)]
+                border border-[var(--cl-teal)]
+                shadow-[0_0_6px_1px_var(--cl-teal)]
+                focus:outline-none focus:ring-2 focus:ring-[var(--cl-green)] transition"
                     />
+
                     <div className="flex gap-3">
-                        <button
+                        <motion.button
                             type="submit"
+                            whileTap={{ scale: 0.95 }}
+                            whileHover={{ scale: 1.03 }}
                             className="bg-[var(--cl-green)] text-[var(--cl-text-dark)] px-4 py-2 rounded font-bold hover:opacity-90 transition"
                         >
                             {editId ? "💾 Speichern" : "Absenden"}
-                        </button>
+                        </motion.button>
+
                         {editId && (
-                            <button
+                            <motion.button
                                 type="button"
+                                whileTap={{ scale: 0.95 }}
+                                whileHover={{ scale: 1.03 }}
                                 onClick={() => {
                                     setEditId(null);
                                     setForm({ name: "", text: "" });
@@ -171,12 +216,12 @@ const CommentSection = ({ postId = "demo-post" }) => {
                                 className="text-sm text-[var(--cl-subtext1)] hover:underline"
                             >
                                 ❌ Abbrechen
-                            </button>
+                            </motion.button>
                         )}
                     </div>
-                </form>
+                </motion.form>
             )}
-        </div>
+        </motion.div>
     );
 };
 

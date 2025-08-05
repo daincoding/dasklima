@@ -1,21 +1,23 @@
 [
   {
     "id": 1,
-    "titel": "Klimawandel verstehen",
-    "kurzbeschreibung": "Eine Einführung in die Ursachen und Auswirkungen des Klimawandels.",
-    "kategorie": "Wissenschaft",
-    "datum": "2023-11-05",
-    "text": "Der Klimawandel ist ein komplexes globales Phänomen, das durch den Anstieg von Treibhausgasen verursacht wird...",
-    "bild":"energie.jpg"
+    "titel": "Rekordanteil erneuerbarer Energien in Deutschland",
+    "kurzbeschreibung": "Erneuerbare Energien sind wichtigste Quelle zur Stromerzeugung",
+    "kategorie": "Erneuerbare Energien",
+    "datum": "2025-07-01",
+    "text": "🔍 Laut Fraunhofer ISE stieg der Anteil erneuerbarer Energien an der öffentlichen Nettostromerzeugung auf 62,7 % – ein historischer Höchstwert. 📈 Besonders Photovoltaik legte stark zu: 72,2 TWh Strom wurdenerzeugt, über dem Ziel der Bundesregierung. - Frauenhofer ISE",
+    "quelle": "Frauenhofer ISE",
+    "bild": "Bild1.png"
   },
   {
     "id": 2,
-    "titel": "10 einfache Tipps zum CO₂-Sparen",
-    "kurzbeschreibung": "Wie du im Alltag Emissionen reduzierst — ganz ohne Verzicht.",
-    "kategorie": "Lifestyle",
-    "datum": "2024-02-18",
-    "text": "Von kürzeren Duschzeiten bis hin zu regionaler Ernährung – hier sind zehn alltagstaugliche Tricks...",
-    "bild":"co2.jpg"
+    "titel": "Internationale Energieagentur: Erneuerbare überholen Kohle",
+    "kurzbeschreibung": "Erneuerbare Energien lösen fossile Brennstoffe ab",
+    "kategorie": "Erneuerbare Energien",
+    "datum": "2025-01-01",
+    "text": "🌎 Die IEA prognostiziert, dass erneuerbare Energien 2025 erstmals weltweit Kohle als wichtigste Stromquelle ablösen. - Die Zeit",
+    "quelle": "Die Zeit",
+    "bild": "Bild2.png"
   },
   {
     "id": 3,
@@ -25,5 +27,25 @@
     "datum": "2024-07-02",
     "text": "Erneuerbare Energien spielen eine Schlüsselrolle in der Energiewende...",
     "bild":"erneuerbare-energien.jpg"
+  },
+  {
+    "id": 4,
+    "titel": "🪸 Wiederaufbau von Korallenriffen – Hoffnung unter Wasser",
+    "kurzbeschreibung": "Ein groß angelegtes Projekt zur Rettung von Korallenriffen stärkt sowohl die Umwelt als auch das Bewusstsein der Menschen.",
+    "kategorie": "Umweltschutz",
+    "datum": "2025-08-05",
+    "text": "Die TUI Care Foundation arbeitet seit Mai 2025 gemeinsam mit der ScubbleBubbles Foundation auf der Karibikinsel Aruba an einem groß angelegten Projekt zur Wiederherstellung von Korallenriffen. Ziel ist es, rund 6.000 m² beschädigtes Riff durch gezielte Pflanzungen und Pflegemaßnahmen zu regenerieren. Dabei geht es nicht nur um Umweltschutz – auch die lokale Bevölkerung und Urlauber*innen werden aktiv eingebunden. Workshops und Tauchprogramme sollen das Bewusstsein für die Bedeutung dieser einzigartigen Ökosysteme stärken.\\n\\nIn Bali wurde ebenfalls ein neues Korallen-Adoptionsprogramm gestartet. Dort konnten bereits über 2.000 m² Riffstrukturen wieder aufgebaut werden. Freiwillige und Wissenschaftler*innen arbeiten täglich daran, junge Korallen in speziell gestalteten „Riffgärten“ zu pflanzen und zu pflegen. Die Korallen wachsen auf künstlichen Strukturen aus Metall oder Stein, die im Meer verankert werden. Langfristig helfen solche Projekte nicht nur der Biodiversität, sondern auch dem Schutz vor Küstenerosion und dem Erhalt des Fischbestands. - We Do OCEAN - Wiederaufbau und Instandhaltung von Korallenriffen",
+    "quelle": "Die Zeit",
+    "bild": "Bild3.png"
+  },
+  {
+    "id": 5,
+    "titel": "Grüne Städte für ein besseres Klima – Urban Gardening & Dachbegrünung",
+    "kurzbeschreibung": "Mit urbaner Begrünung gegen den Klimawandel: Grüne Dächer und Gärten verändern Städte nachhaltig.",
+    "kategorie": "Stadtbegrünung",
+    "datum": "2025-08-05",
+    "text": "Immer mehr Städte in Deutschland setzen auf urbane Begrünung, um dem Klimawandel aktiv entgegenzuwirken. Grüne Dächer, bepflanzte Hausfassaden und Gemeinschaftsgärten verschönern nicht nur das Stadtbild – sie wirken auch wie natürliche Klimaanlagen. Pflanzen kühlen ihre Umgebung, speichern Wasser und binden CO₂.\\n\\nIn Berlin wurde dafür das Programm „Grüne Dächer für Berlin“ gestartet. Seit 2024 unterstützt der Berliner Senat Privatpersonen, Hausverwaltungen und Unternehmen finanziell, wenn sie ihre Dächer begrünen. Besonders in dicht besiedelten Stadtteilen bringt das viele Vorteile: besseres Stadtklima, weniger Feinstaub und neue Lebensräume für Bienen, Schmetterlinge und Vögel.\\n\\nAuch in anderen Städten wie Hamburg, München oder Köln entstehen immer mehr urbane Gärten, wo Menschen ihr eigenes Gemüse anbauen oder Blumen pflanzen. Solche Projekte stärken das Gemeinschaftsgefühl, fördern Umweltschutz im Alltag und zeigen, dass jede*r etwas beitragen kann – direkt vor der eigenen Haustür. - Umweltbundesamt | Für Mensch und Umwelt",
+    "quelle": "Die Zeit",
+    "bild": "Bild4.png"
   }
 ]

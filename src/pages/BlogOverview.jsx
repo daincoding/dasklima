@@ -3,6 +3,7 @@ import CommentSection from "../components/CommentSection.jsx";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useRole } from "../context/RoleContext";
 import { useNavigate } from "react-router-dom";
+import { motion } from 'framer-motion';
 
 function BlogUebersicht() {
     const [beitraege, setBeitraege] = useState([]);
@@ -28,15 +29,21 @@ function BlogUebersicht() {
 
     const kategorien = ['Alle',  ...new Set(beitraege.map(eintrag => eintrag.kategorie))];
 
-    const gefilterteBeitraege = beitraege
-        .filter(eintrag =>
-            eintrag.titel.toLowerCase().includes(suchbegriff.toLowerCase()) &&
-            (ausgewaehlteKategorie === 'Alle' || eintrag.kategorie === ausgewaehlteKategorie) &&
-            (!nurFavoriten || favoriten.includes(eintrag.id))
-        )
-        .sort((a, b) => new Date(b.datum) - new Date(a.datum))
+    const heute = new Date().toISOString().split('T')[0];
 
-    // 🆕 Herz-Toggle Funktion
+    const gefilterteBeitraege = beitraege
+        .filter(eintrag => {
+            const datum = eintrag.veroeffentlichungsdatum || heute;
+            const istVeroeffentlicht = datum <= heute;
+            return (
+                eintrag.titel.toLowerCase().includes(suchbegriff.toLowerCase()) &&
+                (ausgewaehlteKategorie === 'Alle' || eintrag.kategorie === ausgewaehlteKategorie) &&
+                (!nurFavoriten || favoriten.includes(eintrag.id)) &&
+                (rolle === 'admin' || istVeroeffentlicht)
+            );
+        })
+        .sort((a, b) => new Date(b.datum) - new Date(a.datum));
+
     const favoritenToggle = (id) => {
         if (favoriten.includes(id)) {
             setFavoriten(favoriten.filter(favId => favId !== id));
@@ -46,35 +53,39 @@ function BlogUebersicht() {
     };
 
     const blogEintragLoeschen = (id) => {
-        // 1. Entferne aus `beitraege`
         const neueListe = beitraege.filter((eintrag) => eintrag.id !== id);
         setBeitraege(neueListe);
 
-        // 2. Entferne aus localStorage (nur eigene Einträge löschen, nicht die aus JSON-Datei!)
         const lokaleEintraege = JSON.parse(localStorage.getItem("beitraege") || "[]");
         const aktualisiert = lokaleEintraege.filter((eintrag) => eintrag.id !== id);
         localStorage.setItem("beitraege", JSON.stringify(aktualisiert));
 
-        // 3. Falls der gelöschte Beitrag ausgewählt war, Auswahl zurücksetzen
         if (ausgewaehlt?.id === id) {
             setAusgewaehlt(null);
         }
     };
 
     return (
-        <div className="flex flex-col md:flex-row gap-6 p-6 max-w-7xl mx-auto text-[var(--cl-text)]">
-
-            {/* Linke Seite: Detailansicht */}
+        <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="flex flex-col md:flex-row gap-6 p-6 max-w-7xl mx-auto text-[var(--cl-text)]"
+        >
             <div className="w-full md:w-[70%] bg-[var(--cl-surface0)] p-6 rounded-xl shadow-md">
                 {ausgewaehlt ? (
                     <div>
                         <h2 className="text-2xl font-bold mb-2 text-[var(--cl-sky)]">{ausgewaehlt.titel}</h2>
                         <div className="flex justify-center mb-4">
-                            <img
-                                src={`/images/${ausgewaehlt.bild}`}
-                                alt={ausgewaehlt.titel}
-                                className="w-[600px] h-[300px] object-cover rounded-xl border-4 border-[var(--cl-green)] shadow-xl mt-6 mx-auto mb-4"
-                            />
+                            {ausgewaehlt.bild && (
+                                <div className="w-full h-[250px] rounded-t-xl border-4 border-[var(--cl-green)] shadow-xl overflow-hidden mb-4">
+                                    <img
+                                        src={ausgewaehlt.bild.startsWith('data:image') ? ausgewaehlt.bild : `/images/${ausgewaehlt.bild}`}
+                                        alt={ausgewaehlt.titel}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                            )}
                         </div>
                         <p className="text-sm text-[var(--cl-subtext1)] mb-2">
                             {ausgewaehlt.kategorie} • {new Date(ausgewaehlt.datum).toLocaleDateString()}
@@ -84,7 +95,6 @@ function BlogUebersicht() {
                         </p>
                         <p className="leading-relaxed whitespace-pre-line">{ausgewaehlt.text}</p>
 
-                        {/* Kommentarbereich */}
                         <CommentSection postId={`blog-${ausgewaehlt.id}`} />
                     </div>
                 ) : (
@@ -94,71 +104,68 @@ function BlogUebersicht() {
                 )}
             </div>
 
-
-            {/* Rechte Seite: Liste, Suche, Filter */}
-            <div className="w-full md:w-[30%] bg-[var(--cl-surface0)] p-6 rounded-xl shadow-md">
+            <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="w-full md:w-[30%] bg-[var(--cl-surface0)] p-6 rounded-xl shadow-md"
+            >
                 <h1 className="text-2xl font-bold mb-4 text-[var(--cl-green)]">🌿 Blogeinträge</h1>
 
-                {/* Suchfeld */}
                 <input
                     type="text"
                     placeholder="🔎 Nach Titel suchen..."
                     value={suchbegriff}
                     onChange={(e) => setSuchbegriff(e.target.value)}
-                    className="w-full p-3 mb-4 rounded-md bg-[var(--cl-surface1)] text-[var(--cl-text)]
-            placeholder:text-[var(--cl-subtext1)] border border-[var(--cl-teal)]
-            shadow-[0_0_6px_1px_var(--cl-teal)] focus:outline-none focus:ring-2
-            focus:ring-[var(--cl-green)] transition"
+                    className="w-full p-3 mb-4 rounded-md bg-[var(--cl-surface1)] text-[var(--cl-text)] placeholder:text-[var(--cl-subtext1)] border border-[var(--cl-teal)] shadow-[0_0_6px_1px_var(--cl-teal)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-green)] transition"
                 />
 
-                {/* Kategorie-Filter */}
                 <select
                     value={ausgewaehlteKategorie}
                     onChange={(e) => setAusgewaehlteKategorie(e.target.value)}
-                    className="w-full p-3 mb-6 rounded-md bg-[var(--cl-surface1)] text-[var(--cl-text)]
-            border border-[var(--cl-teal)] shadow-[0_0_6px_1px_var(--cl-teal)]"
+                    className="w-full p-3 mb-6 rounded-md bg-[var(--cl-surface1)] text-[var(--cl-text)] border border-[var(--cl-teal)] shadow-[0_0_6px_1px_var(--cl-teal)]"
                 >
                     {kategorien.map((kat, idx) => (
                         <option key={idx} value={kat}>{kat}</option>
                     ))}
                 </select>
 
-                {/* Favoriten-Filter mit Icon */}
                 <div className="flex items-center gap-3 mb-6">
-                    {/* Herz-Icon */}
                     <div className="text-xl">
                         {nurFavoriten
                             ? <AiFillHeart className="text-red-500" />
                             : <AiOutlineHeart className="text-[var(--cl-subtext1)]" />}
                     </div>
 
-                    {/* Slider Toggle */}
                     <div
                         onClick={() => setNurFavoriten(!nurFavoriten)}
-                        className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer transition-all duration-300
-                        ${nurFavoriten ? 'bg-[var(--cl-green)]' : 'bg-[var(--cl-surface2)]'}`}
+                        className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer transition-all duration-300 ${nurFavoriten ? 'bg-[var(--cl-green)]' : 'bg-[var(--cl-surface2)]'}`}
                     >
                         <div
-                            className={`w-4 h-4 rounded-full bg-white shadow-md transform transition-transform duration-300
-                        ${nurFavoriten ? 'translate-x-6' : 'translate-x-0'}`}
+                            className={`w-4 h-4 rounded-full bg-white shadow-md transform transition-transform duration-300 ${nurFavoriten ? 'translate-x-6' : 'translate-x-0'}`}
                         />
                     </div>
                 </div>
 
-
-                {/* Beitragliste */}
                 <ul className="space-y-4">
                     {gefilterteBeitraege.map((eintrag) => (
-                        <li
+                        <motion.li
                             key={eintrag.id}
                             onClick={() => setAusgewaehlt(eintrag)}
-                            className="cursor-pointer p-4 pr-10 rounded-md bg-[var(--cl-surface1)]
-                            hover:bg-[var(--cl-surface2)] border border-[var(--cl-teal)] transition relative"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            className="cursor-pointer p-4 pr-10 rounded-md bg-[var(--cl-surface1)] hover:bg-[var(--cl-surface2)] border border-[var(--cl-teal)] transition relative"
                         >
                             <h2 className="text-lg font-semibold text-[var(--cl-blue)]">{eintrag.titel}</h2>
                             <p className="text-xs text-[var(--cl-subtext1)]">
                                 {new Date(eintrag.datum).toLocaleDateString()} • {eintrag.kategorie}
                             </p>
+
+                            {rolle === 'admin' && eintrag.veroeffentlichungsdatum && new Date(eintrag.veroeffentlichungsdatum) > new Date() && (
+                                <p className="text-xs text-red-500 font-semibold">
+                                    Geplant für Veröffentlichung am {new Date(eintrag.veroeffentlichungsdatum).toLocaleDateString()}
+                                </p>
+                            )}
 
                             {rolle === 'admin' && (
                                 <div className="flex gap-2 mt-2">
@@ -183,7 +190,6 @@ function BlogUebersicht() {
                                 </div>
                             )}
 
-                            {/* Herz-Icon */}
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -195,11 +201,11 @@ function BlogUebersicht() {
                                     ? <AiFillHeart className="text-red-500" />
                                     : <AiOutlineHeart />}
                             </button>
-                        </li>
+                        </motion.li>
                     ))}
                 </ul>
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
 }
 

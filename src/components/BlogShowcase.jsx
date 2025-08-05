@@ -8,13 +8,19 @@ const BlogShowcase = () => {
     const [index, setIndex] = useState(0);
 
     useEffect(() => {
-        // Kombinierte Datenquelle: JSON + localStorage
         fetch("/data/blogeintrag.json")
             .then((antwort) => antwort.json())
             .then((jsonDaten) => {
                 const lokaleEintraege = JSON.parse(localStorage.getItem("beitraege") || "[]");
                 const kombi = [...jsonDaten, ...lokaleEintraege];
-                const sortiert = kombi.sort((a, b) => new Date(b.datum) - new Date(a.datum));
+
+                const heute = new Date().toISOString().split("T")[0];
+                const veroeffentlichteEintraege = kombi.filter(eintrag => {
+                    const datum = eintrag.veroeffentlichungsdatum || heute;
+                    return datum <= heute;
+                });
+
+                const sortiert = veroeffentlichteEintraege.sort((a, b) => new Date(b.datum) - new Date(a.datum));
                 setAlleEintraege(sortiert);
             })
             .catch((fehler) => console.error("Fehler beim Laden der Daten:", fehler));
@@ -48,21 +54,33 @@ const BlogShowcase = () => {
                         <div
                             key={eintrag.id}
                             onClick={() => navigate("/blogoverview", { state: { fokusEintrag: eintrag.id } })}
-                            className="cursor-pointer p-5 rounded-xl shadow-md
-                            border border-[var(--cl-surface2)]
+                            className="cursor-pointer rounded-xl shadow-md border border-[var(--cl-surface2)]
                             bg-gradient-to-br from-[var(--cl-surface1)] via-[var(--cl-surface2)] to-[var(--cl-surface1)]
-                            hover:shadow-[0_0_10px_var(--cl-green)]
-                            transition duration-300"
+                            hover:shadow-[0_0_10px_var(--cl-green)] transition duration-300 overflow-hidden"
                         >
-                            <h4 className="text-lg font-bold text-[var(--cl-green)] mb-2">
-                                {eintrag.titel}
-                            </h4>
-                            <p className="text-sm text-[var(--cl-subtext0)] line-clamp-3">
-                                {eintrag.kurzbeschreibung || "Kein Beschreibungstext vorhanden."}
-                            </p>
-                            <p className="mt-4 text-xs text-[var(--cl-subtext1)] italic">
-                                {new Date(eintrag.datum).toLocaleDateString()}
-                            </p>
+                            {/* Bild-Banner */}
+                            {eintrag.bild && (
+                                <div className="w-full h-[160px] border-b-2 border-[var(--cl-green)] shadow-md">
+                                    <img
+                                        src={eintrag.bild.startsWith("data:") ? eintrag.bild : `/images/${eintrag.bild}`}
+                                        alt={eintrag.titel}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                            )}
+
+                            {/* Inhalt */}
+                            <div className="p-4">
+                                <h4 className="text-lg font-bold text-[var(--cl-green)] mb-2">
+                                    {eintrag.titel}
+                                </h4>
+                                <p className="text-sm text-[var(--cl-subtext0)] line-clamp-3">
+                                    {eintrag.kurzbeschreibung || "Kein Beschreibungstext vorhanden."}
+                                </p>
+                                <p className="mt-4 text-xs text-[var(--cl-subtext1)] italic">
+                                    {new Date(eintrag.datum).toLocaleDateString()}
+                                </p>
+                            </div>
                         </div>
                     ))}
                 </motion.div>

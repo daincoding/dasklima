@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 function FormElement() {
     const location = useLocation();
@@ -12,7 +13,8 @@ function FormElement() {
         kurzbeschreibung: '',
         kategorie: '',
         text: '',
-        veröffentlichungsdatum: ''
+        veroeffentlichungsdatum: '',
+        bild: ''
     });
 
     const [errors, setErrors] = useState({});
@@ -24,7 +26,8 @@ function FormElement() {
                 kurzbeschreibung: eintragZumBearbeiten.kurzbeschreibung || '',
                 kategorie: eintragZumBearbeiten.kategorie || '',
                 text: eintragZumBearbeiten.text || '',
-                veröffentlichungsdatum: eintragZumBearbeiten.veröffentlichungsdatum || ''
+                veroeffentlichungsdatum: eintragZumBearbeiten.veroeffentlichungsdatum || '',
+                bild: eintragZumBearbeiten.bild || ''
             });
         }
     }, [eintragZumBearbeiten]);
@@ -69,8 +72,12 @@ function FormElement() {
     };
 
     return (
-        <form onSubmit={speichern}
-              className="max-w-3xl mx-auto p-6 bg-[var(--cl-surface0)] text-[var(--cl-text)] rounded-xl shadow-[0_0_8px_1px_var(--cl-teal)] space-y-6 mt-6"
+        <motion.form
+            onSubmit={speichern}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="max-w-3xl mx-auto p-6 bg-[var(--cl-surface0)] text-[var(--cl-text)] rounded-xl shadow-[0_0_8px_1px_var(--cl-teal)] space-y-6 mt-6"
         >
             <h2 className="text-2xl font-bold text-[var(--cl-green)] mb-4">
                 {eintragZumBearbeiten ? 'Beitrag bearbeiten' : 'Neuen Blogeintrag erstellen'}
@@ -125,6 +132,35 @@ function FormElement() {
                 />
             </div>
 
+            {/* Bild-Datei Upload */}
+            <div>
+                <label htmlFor="bild" className="block text-sm font-semibold mb-1">
+                    Bild hochladen
+                </label>
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                                setBeitrag(prev => ({ ...prev, bild: reader.result }));
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    }}
+                    className="w-full p-2 rounded-md bg-[var(--cl-surface1)] border border-[var(--cl-teal)] text-[var(--cl-subtext1)] cursor-pointer"
+                />
+                {beitrag.bild && (
+                    <img
+                        src={beitrag.bild}
+                        alt="Vorschau"
+                        className="mt-3 max-h-48 rounded-md border border-[var(--cl-surface2)]"
+                    />
+                )}
+            </div>
+
             {/* Text */}
             <div>
                 <label htmlFor="text" className="block text-sm font-semibold mb-1">
@@ -140,16 +176,16 @@ function FormElement() {
                 />
             </div>
 
-            {/* Veröffentlichungsdatum */}
+            {/* veroeffentlichungsdatum */}
             <div>
-                <label htmlFor="veröffentlichungsdatum" className="block text-sm font-semibold mb-1">
+                <label htmlFor="veroeffentlichungsdatum" className="block text-sm font-semibold mb-1">
                     Veröffentlichungsdatum
                 </label>
                 <input
                     type="date"
-                    name="veröffentlichungsdatum"
-                    id="veröffentlichungsdatum"
-                    value={beitrag.veröffentlichungsdatum}
+                    name="veroeffentlichungsdatum"
+                    id="veroeffentlichungsdatum"
+                    value={beitrag.veroeffentlichungsdatum}
                     onChange={handleChange}
                     className="w-full p-3 rounded-md bg-[var(--cl-surface1)] border border-[var(--cl-teal)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-green)]"
                 />
@@ -164,7 +200,7 @@ function FormElement() {
                     Beitrag speichern
                 </button>
             </div>
-        </form>
+        </motion.form>
     );
 }
 
