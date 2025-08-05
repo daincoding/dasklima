@@ -11,19 +11,20 @@ function FormElement() {
         titel: '',
         kurzbeschreibung: '',
         kategorie: '',
-        text: ''
+        text: '',
+        veröffentlichungsdatum: ''
     });
 
     const [errors, setErrors] = useState({});
 
-    // ⏱ Wenn im Bearbeitungsmodus, setze die Daten einmal beim Laden
     useEffect(() => {
         if (eintragZumBearbeiten) {
             setBeitrag({
                 titel: eintragZumBearbeiten.titel || '',
                 kurzbeschreibung: eintragZumBearbeiten.kurzbeschreibung || '',
                 kategorie: eintragZumBearbeiten.kategorie || '',
-                text: eintragZumBearbeiten.text || ''
+                text: eintragZumBearbeiten.text || '',
+                veröffentlichungsdatum: eintragZumBearbeiten.veröffentlichungsdatum || ''
             });
         }
     }, [eintragZumBearbeiten]);
@@ -49,7 +50,6 @@ function FormElement() {
         const gespeicherte = JSON.parse(localStorage.getItem('beitraege') || '[]');
 
         if (eintragZumBearbeiten) {
-            // ✅ Update-Modus
             const aktualisiert = gespeicherte.map(e =>
                 e.id === eintragZumBearbeiten.id
                     ? { ...eintragZumBearbeiten, ...beitrag }
@@ -57,7 +57,6 @@ function FormElement() {
             );
             localStorage.setItem('beitraege', JSON.stringify(aktualisiert));
         } else {
-            // ✅ Neu-Modus
             const neuerEintrag = {
                 ...beitrag,
                 id: Date.now(),
@@ -70,12 +69,11 @@ function FormElement() {
     };
 
     return (
-        <form
-            onSubmit={speichern}
-            className="max-w-3xl mx-auto p-6 bg-[var(--cl-surface0)] text-[var(--cl-text)] rounded-xl shadow-[0_0_8px_1px_var(--cl-teal)] space-y-6 mt-6"
+        <form onSubmit={speichern}
+              className="max-w-3xl mx-auto p-6 bg-[var(--cl-surface0)] text-[var(--cl-text)] rounded-xl shadow-[0_0_8px_1px_var(--cl-teal)] space-y-6 mt-6"
         >
             <h2 className="text-2xl font-bold text-[var(--cl-green)] mb-4">
-                {eintragZumBearbeiten ? '✏️ Beitrag bearbeiten' : '📝 Neuen Blogeintrag erstellen'}
+                {eintragZumBearbeiten ? 'Beitrag bearbeiten' : 'Neuen Blogeintrag erstellen'}
             </h2>
 
             {/* Titel */}
@@ -142,13 +140,28 @@ function FormElement() {
                 />
             </div>
 
+            {/* Veröffentlichungsdatum */}
+            <div>
+                <label htmlFor="veröffentlichungsdatum" className="block text-sm font-semibold mb-1">
+                    Veröffentlichungsdatum
+                </label>
+                <input
+                    type="date"
+                    name="veröffentlichungsdatum"
+                    id="veröffentlichungsdatum"
+                    value={beitrag.veröffentlichungsdatum}
+                    onChange={handleChange}
+                    className="w-full p-3 rounded-md bg-[var(--cl-surface1)] border border-[var(--cl-teal)] focus:outline-none focus:ring-2 focus:ring-[var(--cl-green)]"
+                />
+            </div>
+
             {/* Submit-Button */}
             <div className="flex justify-end">
                 <button
                     type="submit"
                     className="px-5 py-2 rounded-md bg-[var(--cl-green)] text-[var(--cl-text-dark)] font-semibold hover:opacity-90 transition"
                 >
-                    💾 Beitrag speichern
+                    Beitrag speichern
                 </button>
             </div>
         </form>
